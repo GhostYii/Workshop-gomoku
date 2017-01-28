@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             int x = Random.Range(7, 13);
             int y = Random.Range(7, 13);
+            ai.BoardData[x, y] = (int)BoardState.Black;
             DoChess(x * Board.CROSSCOUNT + y, BoardState.Black);
             bm.BoardData[x, y] = BoardState.Black;
             playerState = BoardState.White;

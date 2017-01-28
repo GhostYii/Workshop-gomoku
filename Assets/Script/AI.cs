@@ -1,7 +1,7 @@
 ﻿public class AI
 {
     // 19*19共有19 * 15 *2 + 15 * 15 * 2种五子连珠的可能性
-    const int MaxFiveChainCount = 1020 ;
+    const int MaxFiveChainCount = 1020;
 
     //玩家的可能性
     bool[,,] playerTable = new bool[Board.CROSSCOUNT, Board.CROSSCOUNT, MaxFiveChainCount];
@@ -22,6 +22,12 @@
     int cGrade, pGrade;
     int iCount, m, n;
     int mat, nat, mde, nde;
+
+    public int[,] BoardData
+    {
+        get { return board; }
+        set { board = value; }
+    }
 
     public AI()
     {
@@ -226,7 +232,7 @@
 
     // AI计算输出, 需要玩家走过的点
     public void ComputerDo(int playerX, int playerY, out int finalX, out int finalY)
-    {        
+    {
         SetPlayerPiece(playerX, playerY);
 
         CalcCore();
@@ -274,11 +280,11 @@
         finalX = m;
         finalY = n;
     }
-    
+
     //返回该位置是否可以下子
     public bool HasChess(int x, int y)
     {
         return board[x, y] != 0;
-    }   
+    }
 }
 
