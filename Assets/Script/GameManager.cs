@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public BoardState playerState = BoardState.White;
     public List<Sprite> lostImages = new List<Sprite>();
     public List<Sprite> victoryImages = new List<Sprite>();
+    public List<Sprite> drawImages = new List<Sprite>();
 
     public Image image;
     public Text text;
@@ -66,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isOver)
+        if (isOver || CheckDraw())
         {
             endPanel.SetActive(true);
             return;
@@ -104,17 +105,21 @@ public class GameManager : MonoBehaviour
         //Debug.Log((int)state);
 
         isOver = CheckEnd(chessIndex, state);
-        if (isOver)
+        bool isDraw = CheckDraw();
+        if (isOver || isDraw)
         {
-            res = state == playerState ? GameResult.Victory : GameResult.Lost;
+            res = isDraw ? GameResult.Draw : ( state == playerState ? GameResult.Victory : GameResult.Lost);
 
             switch (res)
             {
                 case GameResult.Victory:
-                    SetRamdonVictoryImage();
+                    SetRandomVictoryImage();
                     break;
                 case GameResult.Lost:
                     SetRandomLostImages();
+                    break;
+                case GameResult.Draw:
+                    SetRandomDrawImage();
                     break;
                 default:
                     break;
@@ -129,6 +134,15 @@ public class GameManager : MonoBehaviour
     {
         //BoardModel bm = new BoardModel();
         return bm.CheckLink(chessIndex / Board.CROSSCOUNT, chessIndex % Board.CROSSCOUNT, state) >= 5;
+    }
+
+    public bool CheckDraw()
+    {
+        for (int h = 0; h < Board.CROSSCOUNT; h++)
+            for (int v = 0; v < Board.CROSSCOUNT; v++)
+                if (bm.BoardData[h, v] == BoardState.Over)
+                    return false;
+        return true;
     }
 
     public void Retry()
@@ -148,10 +162,16 @@ public class GameManager : MonoBehaviour
         text.text = "YOU LOST!";
     }
 
-    public void SetRamdonVictoryImage()
+    public void SetRandomVictoryImage()
     {
         image.sprite = victoryImages[Random.Range(0, lostImages.Count)];
         text.text = "YOU WIN!";
+    }
+
+    public void SetRandomDrawImage()
+    {
+        image.sprite = drawImages[Random.Range(0, drawImages.Count)];
+        text.text = "DRAW!";
     }
 
 }
@@ -167,4 +187,5 @@ public enum GameResult
 {
     Victory,
     Lost,
+    Draw
 }
